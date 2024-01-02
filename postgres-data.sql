@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS attain_new_job;
-CREATE DATABASE attain_new_job;
+CREATE DATABASE IF NOT EXISTS attain_new_job;
 
 -- Drop binh_luan Table
 DROP TABLE IF EXISTS binh_luan;
