@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model binh_luan {
+  id                 Int        @id @default(autoincrement())
+  ma_cong_viec       Int
+  ma_nguoi_binh_luan Int
+  ngay_binh_luan     DateTime   @db.Date
+  noi_dung           String
+  sao_binh_luan      Int
+  cong_viec          cong_viec  @relation(fields: [ma_cong_viec], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  nguoi_dung         nguoi_dung @relation(fields: [ma_nguoi_binh_luan], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model chi_tiet_loai_cong_viec {
+  id                Int            @id @default(autoincrement())
+  ten_chi_tiet      String         @db.VarChar(255)
+  hinh_anh          String         @db.VarChar(255)
+  ma_loai_cong_viec Int
+  loai_cong_viec    loai_cong_viec @relation(fields: [ma_loai_cong_viec], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  cong_viec         cong_viec[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model cong_viec {
+  id                         Int                     @id @default(autoincrement())
+  ten_cong_viec              String                  @db.VarChar(255)
+  danh_gia                   Int
+  gia_tien                   Int
+  hinh_anh                   String                  @db.VarChar(255)
+  mo_ta                      String
+  mo_ta_ngan                 String                  @db.VarChar(255)
+  sao_cong_viec              Int
+  ma_chi_tiet_loai_cong_viec Int
+  ma_nguoi_tao               Int
+  binh_luan                  binh_luan[]
+  chi_tiet_loai_cong_viec    chi_tiet_loai_cong_viec @relation(fields: [ma_chi_tiet_loai_cong_viec], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  nguoi_dung                 nguoi_dung              @relation(fields: [ma_nguoi_tao], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  thue_cong_viec             thue_cong_viec[]
+}
+
+model loai_cong_viec {
+  id                      Int                       @id @default(autoincrement())
+  ten_loai_cong_viec      String                    @db.VarChar(255)
+  chi_tiet_loai_cong_viec chi_tiet_loai_cong_viec[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model nguoi_dung {
+  id             Int              @id @default(autoincrement())
+  name           String           @db.VarChar(255)
+  email          String           @db.VarChar(255)
+  password       String           @db.VarChar(255)
+  phone          String           @db.VarChar(20)
+  birthday       DateTime         @db.Date
+  gender         String           @db.VarChar(255)
+  role           String           @db.VarChar(255)
+  skill          String[]         @db.VarChar(255)
+  certification  String[]         @db.VarChar(255)
+  binh_luan      binh_luan[]
+  cong_viec      cong_viec[]
+  thue_cong_viec thue_cong_viec[]
+}
+
+model thue_cong_viec {
+  id            Int        @id @default(autoincrement())
+  ma_cong_viec  Int
+  ma_nguoi_thue Int
+  ngay_thue     DateTime   @db.Date
+  hoan_thanh    Boolean    @default(false)
+  cong_viec     cong_viec  @relation(fields: [ma_cong_viec], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  nguoi_dung    nguoi_dung @relation(fields: [ma_nguoi_thue], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
