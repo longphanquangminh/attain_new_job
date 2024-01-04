@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/common/util/response.utils';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -14,11 +15,14 @@ export class UserService {
           email: createUserDto.email,
         },
       });
-      if (!data) {
+      if (data) {
         return responseData(400, 'Email already exist!', '');
       }
       await this.prisma.nguoi_dung.create({
-        data: createUserDto,
+        data: {
+          ...createUserDto,
+          password: bcrypt.hashSync(createUserDto.password, 10),
+        },
       });
 
       return responseData(200, 'Success', '');
