@@ -41,4 +41,9 @@ export class JobTypeController {
   remove(@Param('id') id: string) {
     return this.jobTypeService.remove(+id);
   }
+
+  @Get('/search/:jobTypeName')
+  findName(@Param('jobTypeName') jobTypeName: string) {
+    return this.jobTypeService.findName(jobTypeName);
+  }
 }
