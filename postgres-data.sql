@@ -1,5 +1,9 @@
+-- docker run --name some-postgres -e POSTGRES_PASSWORD=1234 -d -p 5432:5432 postgres
+
 DROP DATABASE IF EXISTS attain_new_job;
 CREATE DATABASE attain_new_job;
+
+-- Hình như trong PostgreSQL không có lệnh USE DB nên anh chịu khó chọn DB attain_new_job thủ công nhé!
 
 -- Drop binh_luan Table
 DROP TABLE IF EXISTS binh_luan;
@@ -27,6 +31,7 @@ CREATE TABLE IF NOT EXISTS nguoi_dung (
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    avatar VARCHAR(255),
     phone VARCHAR(20) NOT NULL,
     birthday DATE NOT NULL,
     gender VARCHAR(255) NOT NULL CHECK (gender IN ('male', 'female')),

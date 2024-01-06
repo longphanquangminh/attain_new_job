@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { JobTypeService } from './job-type.service';
 import { CreateJobTypeDto } from './dto/create-job-type.dto';
@@ -27,6 +28,24 @@ export class JobTypeController {
     return this.jobTypeService.findAll();
   }
 
+  @Get('/search/:jobTypeName')
+  findName(@Param('jobTypeName') jobTypeName: string) {
+    return this.jobTypeService.findName(jobTypeName);
+  }
+
+  @Get('pagination-search')
+  findJobTypePagination(
+    @Query('pageIndex') pageIndex: string,
+    @Query('pageSize') pageSize: string,
+    @Query('keyword') keyword: string,
+  ) {
+    return this.jobTypeService.findJobTypePagination(
+      +pageIndex,
+      +pageSize,
+      keyword,
+    );
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.jobTypeService.findOne(+id);
@@ -40,10 +59,5 @@ export class JobTypeController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.jobTypeService.remove(+id);
-  }
-
-  @Get('/search/:jobTypeName')
-  findName(@Param('jobTypeName') jobTypeName: string) {
-    return this.jobTypeService.findName(jobTypeName);
   }
 }

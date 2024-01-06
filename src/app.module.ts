@@ -9,8 +9,8 @@ import { JobTypeModule } from './job-type/job-type.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    UserModule,
     AuthModule,
+    UserModule,
     JobTypeModule,
   ],
   controllers: [AppController],

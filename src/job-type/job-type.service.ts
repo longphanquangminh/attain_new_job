@@ -111,4 +111,43 @@ export class JobTypeService {
       return responseData(400, 'Error...', '');
     }
   }
+
+  async findJobTypePagination(pageIndex, pageSize, keyword) {
+    try {
+      if (
+        !Number.isInteger(pageIndex) ||
+        pageIndex < 1 ||
+        !Number.isInteger(pageSize) ||
+        pageSize < 1 ||
+        keyword === ''
+      ) {
+        return responseData(400, 'Bad request', '');
+      }
+      const count = await this.prisma.loai_cong_viec.count({
+        where: {
+          ten_loai_cong_viec: {
+            contains: keyword,
+          },
+        },
+      });
+      const data = await this.prisma.loai_cong_viec.findMany({
+        where: {
+          ten_loai_cong_viec: {
+            contains: keyword,
+          },
+        },
+        skip: (pageIndex - 1) * pageSize,
+        take: pageSize,
+      });
+      return responseData(200, 'Success', {
+        pageIndex,
+        pageSize,
+        keyword,
+        totalRow: count,
+        data,
+      });
+    } catch {
+      return responseData(400, 'Error...', '');
+    }
+  }
 }

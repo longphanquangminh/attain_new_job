@@ -58,9 +58,9 @@ model nguoi_dung {
   name           String           @db.VarChar(255)
   email          String           @db.VarChar(255)
   password       String           @db.VarChar(255)
+  avatar         String?          @db.VarChar(255)
   phone          String           @db.VarChar(20)
   birthday       DateTime         @db.Date
-  avatar         String?          @db.VarChar(255)
   gender         String           @db.VarChar(255)
   role           String           @db.VarChar(255)
   skill          String[]         @db.VarChar(255)

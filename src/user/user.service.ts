@@ -206,4 +206,26 @@ export class UserService {
       return responseData(400, 'Error...', '');
     }
   }
+
+  async postAvatar(file: Express.Multer.File) {
+    if (!file) {
+      return responseData(400, 'File not provided!', '');
+    }
+    const data = await this.prisma.nguoi_dung.findUnique({
+      where: {
+        id: 1,
+      },
+    });
+    if (!data) {
+      return responseData(400, 'User not found!', '');
+    }
+    await this.prisma.nguoi_dung.update({
+      where: {
+        id: 1,
+      },
+      data: { avatar: file.filename },
+    });
+
+    return responseData(200, 'Success', '');
+  }
 }
