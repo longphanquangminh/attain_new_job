@@ -97,21 +97,6 @@ export class JobTypeService {
     }
   }
 
-  async findName(jobTypeName) {
-    try {
-      const data = await this.prisma.loai_cong_viec.findMany({
-        where: {
-          ten_loai_cong_viec: {
-            contains: jobTypeName,
-          },
-        },
-      });
-      return responseData(200, 'Success', data);
-    } catch {
-      return responseData(400, 'Error...', '');
-    }
-  }
-
   async findJobTypePagination(pageIndex, pageSize, keyword) {
     try {
       if (

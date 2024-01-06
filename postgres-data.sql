@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS loai_cong_viec (
 CREATE TABLE IF NOT EXISTS chi_tiet_loai_cong_viec (
     id SERIAL PRIMARY KEY,
     ten_chi_tiet VARCHAR(255) NOT NULL,
-    hinh_anh VARCHAR(255) NOT NULL,
+    hinh_anh VARCHAR(255),
     ma_loai_cong_viec INTEGER NOT NULL,
     FOREIGN KEY (ma_loai_cong_viec) REFERENCES loai_cong_viec(id)
 );
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS cong_viec (
     ten_cong_viec VARCHAR(255) NOT NULL,
     danh_gia INTEGER NOT NULL CHECK (danh_gia >= 0 AND danh_gia <= 5),
     gia_tien INTEGER NOT NULL,
-    hinh_anh VARCHAR(255) NOT NULL,
+    hinh_anh VARCHAR(255),
     mo_ta TEXT NOT NULL,
     mo_ta_ngan VARCHAR(255) NOT NULL,
     sao_cong_viec INTEGER NOT NULL CHECK (sao_cong_viec >= 0 AND sao_cong_viec <= 5),

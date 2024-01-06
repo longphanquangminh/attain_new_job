@@ -22,7 +22,7 @@ model binh_luan {
 model chi_tiet_loai_cong_viec {
   id                Int            @id @default(autoincrement())
   ten_chi_tiet      String         @db.VarChar(255)
-  hinh_anh          String         @db.VarChar(255)
+  hinh_anh          String?        @db.VarChar(255)
   ma_loai_cong_viec Int
   loai_cong_viec    loai_cong_viec @relation(fields: [ma_loai_cong_viec], references: [id], onDelete: NoAction, onUpdate: NoAction)
   cong_viec         cong_viec[]
@@ -34,7 +34,7 @@ model cong_viec {
   ten_cong_viec              String                  @db.VarChar(255)
   danh_gia                   Int
   gia_tien                   Int
-  hinh_anh                   String                  @db.VarChar(255)
+  hinh_anh                   String?                 @db.VarChar(255)
   mo_ta                      String
   mo_ta_ngan                 String                  @db.VarChar(255)
   sao_cong_viec              Int

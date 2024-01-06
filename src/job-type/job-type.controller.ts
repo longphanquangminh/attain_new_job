@@ -28,11 +28,6 @@ export class JobTypeController {
     return this.jobTypeService.findAll();
   }
 
-  @Get('/search/:jobTypeName')
-  findName(@Param('jobTypeName') jobTypeName: string) {
-    return this.jobTypeService.findName(jobTypeName);
-  }
-
   @Get('pagination-search')
   findJobTypePagination(
     @Query('pageIndex') pageIndex: string,

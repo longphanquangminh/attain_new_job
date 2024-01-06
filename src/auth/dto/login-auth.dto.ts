@@ -1,4 +1,8 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateAuthDto } from './create-auth.dto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class LoginAuthDto extends PartialType(CreateAuthDto) {}
+export class LoginAuthDto {
+  @ApiProperty()
+  email: string;
+  @ApiProperty()
+  password: string;
+}
