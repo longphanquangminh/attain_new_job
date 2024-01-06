@@ -7,6 +7,9 @@ import { AuthModule } from './auth/auth.module';
 import { JobTypeModule } from './job-type/job-type.module';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { DetailJobTypeModule } from './detail-job-type/detail-job-type.module';
+import { JobModule } from './job/job.module';
+import { HireJobModule } from './hire-job/hire-job.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -15,6 +18,9 @@ import { DetailJobTypeModule } from './detail-job-type/detail-job-type.module';
     UserModule,
     JobTypeModule,
     DetailJobTypeModule,
+    JobModule,
+    HireJobModule,
+    CommentModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtStrategy],
