@@ -7,6 +7,6 @@ export class CreateUserDto {
   birthday: string;
   gender: string;
   role: string;
-  skill: string[];
-  certification: string[];
+  skill?: string[];
+  certification?: string[];
 }

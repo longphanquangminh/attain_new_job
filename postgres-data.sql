@@ -36,8 +36,8 @@ CREATE TABLE IF NOT EXISTS nguoi_dung (
     birthday DATE NOT NULL,
     gender VARCHAR(255) NOT NULL CHECK (gender IN ('male', 'female')),
     role VARCHAR(255) NOT NULL CHECK (role IN ('admin', 'user')),
-    skill VARCHAR(255)[] NOT NULL,
-    certification VARCHAR(255)[] NOT NULL
+    skill VARCHAR(255)[],
+    certification VARCHAR(255)[]
 );
 
 -- loai_cong_viec (Job Category)

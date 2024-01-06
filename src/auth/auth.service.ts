@@ -15,26 +15,22 @@ export class AuthService {
   ) {}
   prisma = new PrismaClient();
   async register(createAuthDto: CreateAuthDto) {
-    try {
-      const data = await this.prisma.nguoi_dung.findFirst({
-        where: {
-          email: createAuthDto.email,
-        },
-      });
-      if (data) {
-        return responseData(400, 'Email already exist!', '');
-      }
-      await this.prisma.nguoi_dung.create({
-        data: {
-          ...createAuthDto,
-          password: bcrypt.hashSync(createAuthDto.password, 10),
-        },
-      });
-
-      return responseData(200, 'Success', '');
-    } catch {
-      return responseData(400, 'Error...', '');
+    const data = await this.prisma.nguoi_dung.findFirst({
+      where: {
+        email: createAuthDto.email,
+      },
+    });
+    if (data) {
+      return responseData(400, 'Email already exist!', '');
     }
+    await this.prisma.nguoi_dung.create({
+      data: {
+        ...createAuthDto,
+        password: bcrypt.hashSync(createAuthDto.password, 10),
+      },
+    });
+
+    return responseData(200, 'Success', '');
   }
 
   async login(loginAuthDto: LoginAuthDto) {

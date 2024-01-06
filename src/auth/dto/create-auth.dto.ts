@@ -3,10 +3,10 @@ export class CreateAuthDto {
   email: string;
   password: string;
   phone: string;
-  avatar: string;
+  avatar?: string;
   birthday: string;
   gender: string;
   role: string;
-  skill: string[];
-  certification: string[];
+  skill?: string[];
+  certification?: string[];
 }
