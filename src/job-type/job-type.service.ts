@@ -31,7 +31,7 @@ export class JobTypeService {
     try {
       const count = await this.prisma.loai_cong_viec.count();
       const data = await this.prisma.loai_cong_viec.findMany();
-      return responseData(200, 'Success', { data, count });
+      return responseData(200, 'Success', { count, data });
     } catch {
       return responseData(400, 'Error...', '');
     }

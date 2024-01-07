@@ -42,7 +42,7 @@ export class CommentService {
           nguoi_dung: true,
         },
       });
-      return responseData(200, 'Success', { data, count });
+      return responseData(200, 'Success', { count, data });
     } catch {
       return responseData(400, 'Error...', '');
     }
@@ -131,7 +131,7 @@ export class CommentService {
           ma_cong_viec: jobId,
         },
       });
-      return responseData(200, 'Success', { data, count });
+      return responseData(200, 'Success', { count, data });
     } catch {
       return responseData(400, 'Error...', '');
     }

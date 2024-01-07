@@ -53,7 +53,7 @@ export class UserService {
           id: 'asc',
         },
       });
-      return responseData(200, 'Success', { data, count });
+      return responseData(200, 'Success', { count, data });
     } catch {
       return responseData(400, 'Error...', '');
     }

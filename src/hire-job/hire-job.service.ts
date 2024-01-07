@@ -42,7 +42,7 @@ export class HireJobService {
       const data = await this.prisma.thue_cong_viec.findMany({
         select: hireJobQuery,
       });
-      return responseData(200, 'Success', { data, count });
+      return responseData(200, 'Success', { count, data });
     } catch {
       return responseData(400, 'Error...', '');
     }
