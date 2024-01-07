@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   UploadedFile,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -80,7 +81,8 @@ export class UserController {
     }),
   )
   @Post('/upload-avatar')
-  upload(@UploadedFile() file: Express.Multer.File) {
-    return this.userService.postAvatar(file);
+  upload(@Req() request, @UploadedFile() file: Express.Multer.File) {
+    const token = request.headers.authorization.split(' ')[1];
+    return this.userService.postAvatar(token, file);
   }
 }

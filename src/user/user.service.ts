@@ -4,9 +4,12 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaClient } from '@prisma/client';
 import { responseData } from 'src/common/util/response.utils';
 import * as bcrypt from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
+  constructor(private jwtService: JwtService) {}
   prisma = new PrismaClient();
   async create(createUserDto: CreateUserDto) {
     try {
@@ -207,13 +210,14 @@ export class UserService {
     }
   }
 
-  async postAvatar(file: Express.Multer.File) {
+  async postAvatar(token, file: Express.Multer.File) {
     if (!file) {
       return responseData(400, 'File not provided!', '');
     }
+    const tokenRealData = this.jwtService.decode(token);
     const data = await this.prisma.nguoi_dung.findUnique({
       where: {
-        id: 1,
+        id: tokenRealData.user_id,
       },
     });
     if (!data) {
@@ -221,7 +225,7 @@ export class UserService {
     }
     await this.prisma.nguoi_dung.update({
       where: {
-        id: 1,
+        id: tokenRealData.user_id,
       },
       data: { avatar: file.filename },
     });
