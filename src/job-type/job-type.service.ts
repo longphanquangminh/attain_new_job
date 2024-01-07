@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateJobTypeDto } from './dto/create-job-type.dto';
 import { UpdateJobTypeDto } from './dto/update-job-type.dto';
-import { responseData } from 'src/common/utils/response.utils';
+import { responseData } from 'src/common/utils/response.util';
 import { PrismaClient } from '@prisma/client';
 
 @Injectable()

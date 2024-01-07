@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { responseData } from 'src/common/utils/response.utils';
+import { responseData } from 'src/common/utils/response.util';
 import { PrismaClient } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 

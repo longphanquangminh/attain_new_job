@@ -57,4 +57,20 @@ export class HireJobController {
     const token = request.headers.authorization.split(' ')[1];
     return this.hireJobService.remove(+id, token);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('get-hired-jobs-by-user')
+  getHiredJobsByUser(@Req() request) {
+    const token = request.headers.authorization.split(' ')[1];
+    return this.hireJobService.getHiredJobsByUser(token);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('job-done/:id')
+  postDoneWork(@Req() request, @Param('id') id: string) {
+    const token = request.headers.authorization.split(' ')[1];
+    return this.hireJobService.postDoneWork(+id, token);
+  }
 }

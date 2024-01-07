@@ -3,7 +3,8 @@ import { CreateHireJobDto } from './dto/create-hire-job.dto';
 import { UpdateHireJobDto } from './dto/update-hire-job.dto';
 import { PrismaClient } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
-import { responseData } from 'src/common/utils/response.utils';
+import { responseData } from 'src/common/utils/response.util';
+import { hireJobQuery } from './queries/hire-job.query';
 
 @Injectable()
 export class HireJobService {
@@ -11,6 +12,14 @@ export class HireJobService {
   prisma = new PrismaClient();
   async create(token, createHireJobDto: CreateHireJobDto) {
     try {
+      const theJob = await this.prisma.thue_cong_viec.findFirst({
+        where: {
+          ma_cong_viec: createHireJobDto.ma_cong_viec,
+        },
+      });
+      if (theJob) {
+        return responseData(400, 'The job already hired!', '');
+      }
       const tokenRealData = this.jwtService.decode(token);
       await this.prisma.thue_cong_viec.create({
         data: {
@@ -31,61 +40,7 @@ export class HireJobService {
     try {
       const count = await this.prisma.thue_cong_viec.count();
       const data = await this.prisma.thue_cong_viec.findMany({
-        select: {
-          id: true,
-          ma_cong_viec: true,
-          ma_nguoi_thue: true,
-          ngay_thue: true,
-          hoan_thanh: true,
-          cong_viec: {
-            select: {
-              id: true,
-              ten_cong_viec: true,
-              danh_gia: true,
-              gia_tien: true,
-              hinh_anh: true,
-              mo_ta: true,
-              mo_ta_ngan: true,
-              sao_cong_viec: true,
-              ma_chi_tiet_loai_cong_viec: true,
-              ma_nguoi_tao: true,
-              chi_tiet_loai_cong_viec: {
-                select: {
-                  id: true,
-                  ten_chi_tiet: true,
-                },
-              },
-              nguoi_dung: {
-                select: {
-                  id: true,
-                  name: true,
-                  email: true,
-                  phone: true,
-                  avatar: true,
-                  birthday: true,
-                  gender: true,
-                  role: true,
-                  skill: true,
-                  certification: true,
-                },
-              },
-            },
-          },
-          nguoi_dung: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true,
-              avatar: true,
-              birthday: true,
-              gender: true,
-              role: true,
-              skill: true,
-              certification: true,
-            },
-          },
-        },
+        select: hireJobQuery,
       });
       return responseData(200, 'Success', { data, count });
     } catch {
@@ -99,41 +54,10 @@ export class HireJobService {
         where: {
           id: id,
         },
-        select: {
-          id: true,
-          ten_cong_viec: true,
-          danh_gia: true,
-          gia_tien: true,
-          hinh_anh: true,
-          mo_ta: true,
-          mo_ta_ngan: true,
-          sao_cong_viec: true,
-          ma_chi_tiet_loai_cong_viec: true,
-          ma_nguoi_tao: true,
-          chi_tiet_loai_cong_viec: {
-            select: {
-              id: true,
-              ten_chi_tiet: true,
-            },
-          },
-          nguoi_dung: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true,
-              avatar: true,
-              birthday: true,
-              gender: true,
-              role: true,
-              skill: true,
-              certification: true,
-            },
-          },
-        },
+        select: hireJobQuery,
       });
       if (!data) {
-        return responseData(400, 'Job not found!', '');
+        return responseData(400, 'Hired job not found!', '');
       }
       return responseData(200, 'Success', data);
     } catch {
@@ -149,11 +73,11 @@ export class HireJobService {
         },
       });
       if (!data) {
-        return responseData(400, 'Job not found!', '');
+        return responseData(400, 'Hired job not found!', '');
       }
       const tokenRealData = this.jwtService.decode(token);
-      if (data.ma_nguoi_tao !== tokenRealData.user_id) {
-        return responseData(403, "Forbidden! Not user's created job!", '');
+      if (data.ma_nguoi_thue !== tokenRealData.user_id) {
+        return responseData(403, "Forbidden! Not user's hired job!", '');
       }
       await this.prisma.thue_cong_viec.update({
         where: {
@@ -176,15 +100,58 @@ export class HireJobService {
         },
       });
       if (!data) {
-        return responseData(400, 'Job not found!', '');
+        return responseData(400, 'Hired job not found!', '');
       }
       const tokenRealData = this.jwtService.decode(token);
-      if (data.ma_nguoi_tao !== tokenRealData.user_id) {
+      if (data.ma_nguoi_thue !== tokenRealData.user_id) {
         return responseData(403, "Forbidden! Not user's created job!", '');
       }
       await this.prisma.thue_cong_viec.delete({
         where: {
           id,
+        },
+      });
+      return responseData(200, 'Success', '');
+    } catch {
+      return responseData(400, 'Error...', '');
+    }
+  }
+
+  async getHiredJobsByUser(token) {
+    try {
+      const tokenRealData = this.jwtService.decode(token);
+      const data = await this.prisma.thue_cong_viec.findMany({
+        where: {
+          id: tokenRealData.user_id,
+        },
+        select: hireJobQuery,
+      });
+      return responseData(200, 'Success', data);
+    } catch {
+      return responseData(400, 'Error...', '');
+    }
+  }
+
+  async postDoneWork(id: number, token) {
+    try {
+      const data = await this.prisma.thue_cong_viec.findUnique({
+        where: {
+          id: id,
+        },
+      });
+      if (!data) {
+        return responseData(400, 'Hired job not found!', '');
+      }
+      const tokenRealData = this.jwtService.decode(token);
+      if (data.ma_nguoi_thue !== tokenRealData.user_id) {
+        return responseData(403, "Forbidden! Not user's hired job!", '');
+      }
+      await this.prisma.thue_cong_viec.update({
+        where: {
+          id,
+        },
+        data: {
+          hoan_thanh: true,
         },
       });
       return responseData(200, 'Success', '');
