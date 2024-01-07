@@ -16,19 +16,22 @@ import { JobService } from './job.service';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
 import { ApiTags, ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { UploadAvatarDto } from '../user/dto/upload-avatar.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { AuthGuard } from '@nestjs/passport';
+import { UploadJobImageDto } from './dto/upload-job-image.dto';
 
 @ApiTags('job')
 @Controller('job')
 export class JobController {
   constructor(private readonly jobService: JobService) {}
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Post()
-  create(@Body() createJobDto: CreateJobDto) {
-    return this.jobService.create(createJobDto);
+  create(@Req() request, @Body() createJobDto: CreateJobDto) {
+    const token = request.headers.authorization.split(' ')[1];
+    return this.jobService.create(token, createJobDto);
   }
 
   @Get()
@@ -64,7 +67,7 @@ export class JobController {
   @UseGuards(AuthGuard('jwt'))
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: UploadAvatarDto,
+    type: UploadJobImageDto,
   })
   @UseInterceptors(
     FileInterceptor('image', {

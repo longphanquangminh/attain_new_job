@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
-import { responseData } from 'src/common/util/response.utils';
+import { responseData } from 'src/common/utils/response.utils';
 import { PrismaClient } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 
@@ -9,10 +9,11 @@ import { JwtService } from '@nestjs/jwt';
 export class JobService {
   constructor(private jwtService: JwtService) {}
   prisma = new PrismaClient();
-  async create(createJobDto: CreateJobDto) {
+  async create(token, createJobDto: CreateJobDto) {
     try {
+      const tokenRealData = this.jwtService.decode(token);
       await this.prisma.cong_viec.create({
-        data: createJobDto,
+        data: { ...createJobDto, ma_nguoi_tao: tokenRealData.user_id },
       });
 
       return responseData(200, 'Success', '');
