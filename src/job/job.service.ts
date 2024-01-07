@@ -113,7 +113,7 @@ export class JobService {
     }
   }
 
-  async update(id: number, updateJobDto: UpdateJobDto) {
+  async update(id: number, token, updateJobDto: UpdateJobDto) {
     try {
       const data = await this.prisma.cong_viec.findUnique({
         where: {
@@ -122,6 +122,10 @@ export class JobService {
       });
       if (!data) {
         return responseData(400, 'Job not found!', '');
+      }
+      const tokenRealData = this.jwtService.decode(token);
+      if (data.ma_nguoi_tao !== tokenRealData.user_id) {
+        return responseData(403, "Forbidden! Not user's created job!", '');
       }
       await this.prisma.cong_viec.update({
         where: {
@@ -136,7 +140,7 @@ export class JobService {
     }
   }
 
-  async remove(id: number) {
+  async remove(id: number, token) {
     try {
       const data = await this.prisma.cong_viec.findUnique({
         where: {
@@ -145,6 +149,10 @@ export class JobService {
       });
       if (!data) {
         return responseData(400, 'Job not found!', '');
+      }
+      const tokenRealData = this.jwtService.decode(token);
+      if (data.ma_nguoi_tao !== tokenRealData.user_id) {
+        return responseData(403, "Forbidden! Not user's created job!", '');
       }
       await this.prisma.cong_viec.delete({
         where: {

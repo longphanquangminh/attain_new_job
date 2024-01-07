@@ -53,14 +53,24 @@ export class JobController {
     return this.jobService.findOne(+id);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateJobDto: UpdateJobDto) {
-    return this.jobService.update(+id, updateJobDto);
+  update(
+    @Req() request,
+    @Param('id') id: string,
+    @Body() updateJobDto: UpdateJobDto,
+  ) {
+    const token = request.headers.authorization.split(' ')[1];
+    return this.jobService.update(+id, token, updateJobDto);
   }
 
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.jobService.remove(+id);
+  remove(@Req() request, @Param('id') id: string) {
+    const token = request.headers.authorization.split(' ')[1];
+    return this.jobService.remove(+id, token);
   }
 
   @ApiBearerAuth()
