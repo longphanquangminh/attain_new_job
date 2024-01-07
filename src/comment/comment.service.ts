@@ -4,6 +4,7 @@ import { UpdateCommentDto } from './dto/update-comment.dto';
 import { PrismaClient } from '@prisma/client';
 import { JwtService } from '@nestjs/jwt';
 import { responseData } from 'src/common/utils/response.util';
+import { userQuery } from 'src/common/queries/user.query';
 
 @Injectable()
 export class CommentService {
@@ -39,7 +40,9 @@ export class CommentService {
       const count = await this.prisma.binh_luan.count();
       const data = await this.prisma.binh_luan.findMany({
         include: {
-          nguoi_dung: true,
+          nguoi_dung: {
+            select: userQuery,
+          },
         },
       });
       return responseData(200, 'Success', { count, data });
@@ -55,7 +58,9 @@ export class CommentService {
           id: id,
         },
         include: {
-          nguoi_dung: true,
+          nguoi_dung: {
+            select: userQuery,
+          },
         },
       });
       if (!data) {
