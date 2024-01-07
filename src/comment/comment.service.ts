@@ -135,6 +135,11 @@ export class CommentService {
         where: {
           ma_cong_viec: jobId,
         },
+        include: {
+          nguoi_dung: {
+            select: userQuery,
+          },
+        },
       });
       return responseData(200, 'Success', { count, data });
     } catch {
