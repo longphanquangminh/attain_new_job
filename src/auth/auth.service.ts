@@ -34,34 +34,30 @@ export class AuthService {
   }
 
   async login(loginAuthDto: LoginAuthDto) {
-    try {
-      const user = await this.prisma.nguoi_dung.findFirst({
-        where: {
-          email: loginAuthDto.email,
+    const user = await this.prisma.nguoi_dung.findFirst({
+      where: {
+        email: loginAuthDto.email,
+      },
+    });
+    if (!user) {
+      return responseData(400, 'Email not found!', '');
+    }
+    if (bcrypt.compareSync(loginAuthDto.password, user.password)) {
+      const key = new Date().getTime();
+      const token = this.jwtService.sign(
+        {
+          user_id: user.id,
+          key,
         },
-      });
-      if (!user) {
-        return responseData(400, 'Email not found!', '');
-      }
-      if (bcrypt.compareSync(loginAuthDto.password, user.password)) {
-        const key = new Date().getTime();
-        const token = this.jwtService.sign(
-          {
-            user_id: user.id,
-            key,
-          },
-          {
-            expiresIn: '30d',
-            secret: this.configService.get('JWT_SECRET'),
-          },
-        );
+        {
+          expiresIn: '30d',
+          secret: this.configService.get('JWT_SECRET'),
+        },
+      );
 
-        return responseData(200, 'Login success!', token);
-      } else {
-        return responseData(400, 'Password is incorrect', '');
-      }
-    } catch {
-      return responseData(400, 'Error...', '');
+      return responseData(200, 'Login success!', token);
+    } else {
+      return responseData(400, 'Password is incorrect', '');
     }
   }
 }

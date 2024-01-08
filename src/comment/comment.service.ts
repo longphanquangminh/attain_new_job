@@ -11,139 +11,115 @@ export class CommentService {
   constructor(private jwtService: JwtService) {}
   prisma = new PrismaClient();
   async create(token, createCommentDto: CreateCommentDto) {
-    try {
-      const theJob = await this.prisma.cong_viec.findFirst({
-        where: {
-          id: createCommentDto.ma_cong_viec,
-        },
-      });
-      if (!theJob) {
-        return responseData(400, 'Job not exist!', '');
-      }
-      const tokenRealData = this.jwtService.decode(token);
-      await this.prisma.binh_luan.create({
-        data: {
-          ...createCommentDto,
-          ma_nguoi_binh_luan: tokenRealData.user_id,
-          ngay_binh_luan: new Date(),
-        },
-      });
-
-      return responseData(200, 'Success', '');
-    } catch {
-      return responseData(400, 'Error...', '');
+    const theJob = await this.prisma.cong_viec.findFirst({
+      where: {
+        id: createCommentDto.ma_cong_viec,
+      },
+    });
+    if (!theJob) {
+      return responseData(400, 'Job not exist!', '');
     }
+    const tokenRealData = this.jwtService.decode(token);
+    await this.prisma.binh_luan.create({
+      data: {
+        ...createCommentDto,
+        ma_nguoi_binh_luan: tokenRealData.user_id,
+        ngay_binh_luan: new Date(),
+      },
+    });
+
+    return responseData(200, 'Success', '');
   }
 
   async findAll() {
-    try {
-      const count = await this.prisma.binh_luan.count();
-      const data = await this.prisma.binh_luan.findMany({
-        include: {
-          nguoi_dung: {
-            select: userQuery,
-          },
+    const count = await this.prisma.binh_luan.count();
+    const data = await this.prisma.binh_luan.findMany({
+      include: {
+        nguoi_dung: {
+          select: userQuery,
         },
-      });
-      return responseData(200, 'Success', { count, data });
-    } catch {
-      return responseData(400, 'Error...', '');
-    }
+      },
+    });
+    return responseData(200, 'Success', { count, data });
   }
 
   async findOne(id: number) {
-    try {
-      const data = await this.prisma.binh_luan.findUnique({
-        where: {
-          id: id,
+    const data = await this.prisma.binh_luan.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        nguoi_dung: {
+          select: userQuery,
         },
-        include: {
-          nguoi_dung: {
-            select: userQuery,
-          },
-        },
-      });
-      if (!data) {
-        return responseData(400, 'Comment not found!', '');
-      }
-      return responseData(200, 'Success', data);
-    } catch {
-      return responseData(400, 'Error...', '');
+      },
+    });
+    if (!data) {
+      return responseData(400, 'Comment not found!', '');
     }
+    return responseData(200, 'Success', data);
   }
 
   async update(id: number, token, updateCommentDto: UpdateCommentDto) {
-    try {
-      const data = await this.prisma.binh_luan.findUnique({
-        where: {
-          id: id,
-        },
-      });
-      if (!data) {
-        return responseData(400, 'Comment not found!', '');
-      }
-      const tokenRealData = this.jwtService.decode(token);
-      if (data.ma_nguoi_binh_luan !== tokenRealData.user_id) {
-        return responseData(403, "Forbidden! Not user's comment!", '');
-      }
-      await this.prisma.binh_luan.update({
-        where: {
-          id,
-        },
-        data: { ...updateCommentDto, ngay_binh_luan: new Date() },
-      });
-
-      return responseData(200, 'Success', '');
-    } catch {
-      return responseData(400, 'Error...', '');
+    const data = await this.prisma.binh_luan.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!data) {
+      return responseData(400, 'Comment not found!', '');
     }
+    const tokenRealData = this.jwtService.decode(token);
+    if (data.ma_nguoi_binh_luan !== tokenRealData.user_id) {
+      return responseData(403, "Forbidden! Not user's comment!", '');
+    }
+    await this.prisma.binh_luan.update({
+      where: {
+        id,
+      },
+      data: { ...updateCommentDto, ngay_binh_luan: new Date() },
+    });
+
+    return responseData(200, 'Success', '');
   }
 
   async remove(id: number, token) {
-    try {
-      const data = await this.prisma.binh_luan.findUnique({
-        where: {
-          id: id,
-        },
-      });
-      if (!data) {
-        return responseData(400, 'Comment not found!', '');
-      }
-      const tokenRealData = this.jwtService.decode(token);
-      if (data.ma_nguoi_binh_luan !== tokenRealData.user_id) {
-        return responseData(403, "Forbidden! Not user's comment!", '');
-      }
-      await this.prisma.binh_luan.delete({
-        where: {
-          id,
-        },
-      });
-      return responseData(200, 'Success', '');
-    } catch {
-      return responseData(400, 'Error...', '');
+    const data = await this.prisma.binh_luan.findUnique({
+      where: {
+        id: id,
+      },
+    });
+    if (!data) {
+      return responseData(400, 'Comment not found!', '');
     }
+    const tokenRealData = this.jwtService.decode(token);
+    if (data.ma_nguoi_binh_luan !== tokenRealData.user_id) {
+      return responseData(403, "Forbidden! Not user's comment!", '');
+    }
+    await this.prisma.binh_luan.delete({
+      where: {
+        id,
+      },
+    });
+    return responseData(200, 'Success', '');
   }
 
   async getCommentsByJob(jobId) {
-    try {
-      const count = await this.prisma.binh_luan.count({
-        where: {
-          ma_cong_viec: jobId,
+    const count = await this.prisma.binh_luan.count({
+      where: {
+        ma_cong_viec: jobId,
+      },
+    });
+    const data = await this.prisma.binh_luan.findMany({
+      where: {
+        ma_cong_viec: jobId,
+      },
+      include: {
+        nguoi_dung: {
+          select: userQuery,
         },
-      });
-      const data = await this.prisma.binh_luan.findMany({
-        where: {
-          ma_cong_viec: jobId,
-        },
-        include: {
-          nguoi_dung: {
-            select: userQuery,
-          },
-        },
-      });
-      return responseData(200, 'Success', { count, data });
-    } catch {
-      return responseData(400, 'Error...', '');
-    }
+      },
+    });
+    return responseData(200, 'Success', { count, data });
   }
 }
