@@ -141,7 +141,7 @@ export class UserService {
     try {
       const data = await this.prisma.nguoi_dung.findUnique({
         where: {
-          id: id,
+          id,
         },
         select: {
           id: true,
@@ -169,7 +169,7 @@ export class UserService {
     try {
       const data = await this.prisma.nguoi_dung.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -192,7 +192,7 @@ export class UserService {
     try {
       const data = await this.prisma.nguoi_dung.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {

@@ -54,7 +54,7 @@ export class DetailJobTypeService {
     try {
       const data = await this.prisma.chi_tiet_loai_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
         select: {
           id: true,
@@ -82,7 +82,7 @@ export class DetailJobTypeService {
     try {
       const data = await this.prisma.chi_tiet_loai_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -113,7 +113,7 @@ export class DetailJobTypeService {
     try {
       const data = await this.prisma.chi_tiet_loai_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {

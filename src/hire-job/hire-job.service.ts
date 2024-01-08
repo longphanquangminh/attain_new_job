@@ -52,7 +52,7 @@ export class HireJobService {
     try {
       const data = await this.prisma.thue_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
         select: hireJobQuery,
       });
@@ -69,7 +69,7 @@ export class HireJobService {
     try {
       const data = await this.prisma.thue_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -96,7 +96,7 @@ export class HireJobService {
     try {
       const data = await this.prisma.thue_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -136,7 +136,7 @@ export class HireJobService {
     try {
       const data = await this.prisma.thue_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {

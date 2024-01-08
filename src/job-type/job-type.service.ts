@@ -41,7 +41,7 @@ export class JobTypeService {
     try {
       const data = await this.prisma.loai_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -57,7 +57,7 @@ export class JobTypeService {
     try {
       const data = await this.prisma.loai_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -80,7 +80,7 @@ export class JobTypeService {
     try {
       const data = await this.prisma.loai_cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {

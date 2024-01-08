@@ -55,7 +55,7 @@ export class CommentService {
     try {
       const data = await this.prisma.binh_luan.findUnique({
         where: {
-          id: id,
+          id,
         },
         include: {
           nguoi_dung: {
@@ -76,7 +76,7 @@ export class CommentService {
     try {
       const data = await this.prisma.binh_luan.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -103,7 +103,7 @@ export class CommentService {
     try {
       const data = await this.prisma.binh_luan.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {

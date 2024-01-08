@@ -69,7 +69,7 @@ export class JobService {
     try {
       const data = await this.prisma.cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
         select: {
           id: true,
@@ -117,7 +117,7 @@ export class JobService {
     try {
       const data = await this.prisma.cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
@@ -144,7 +144,7 @@ export class JobService {
     try {
       const data = await this.prisma.cong_viec.findUnique({
         where: {
-          id: id,
+          id,
         },
       });
       if (!data) {
